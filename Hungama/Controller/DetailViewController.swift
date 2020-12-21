@@ -9,6 +9,7 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     @IBOutlet weak var crewCollectionView: UICollectionView!
     @IBOutlet weak var castCollectionView: UICollectionView!
@@ -51,6 +52,9 @@ class DetailViewController: UIViewController {
     }
     
     private func getMovieDetails() {
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
         guard let movie = self.movie else {return}
         let queryItems = [URLQueryItem(name: "api_key", value: ApiHandler.api_key), URLQueryItem(name: "language", value: ApiHandler.language)]
         
@@ -60,6 +64,9 @@ class DetailViewController: UIViewController {
     }
     
     private func getCastAndCrew() {
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
         guard let movie = self.movie else {return}
         let queryItems = [URLQueryItem(name: "api_key", value: ApiHandler.api_key), URLQueryItem(name: "language", value: ApiHandler.language)]
         
@@ -69,6 +76,7 @@ class DetailViewController: UIViewController {
             self.crews = crewCastDetails.crew
             self.casts = crewCastDetails.cast
             DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
                 self.castCollectionView.reloadData()
                 self.crewCollectionView.reloadData()
             }
@@ -76,6 +84,9 @@ class DetailViewController: UIViewController {
     }
     
     private func getSimilarMovies(){
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
         guard let movie = self.movie else {return}
         let queryItems = [URLQueryItem(name: "api_key", value: ApiHandler.api_key), URLQueryItem(name: "language", value: ApiHandler.language), URLQueryItem(name: "page", value: "1")]
         
@@ -84,6 +95,7 @@ class DetailViewController: UIViewController {
         ApiHandler.shared.getApiCall(urlString: appendedUrl, queryParams: queryItems) { (similarMovie: SimilarMovie) in
             self.similarMovie = similarMovie.results
             DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
                 self.similarMovieCollectionView.reloadData()
             }
         }
@@ -98,6 +110,7 @@ class DetailViewController: UIViewController {
             self.genreLabel.text = movieDetails.genres!.map{$0.name!}.joined(separator: ",")
             self.languageLabel.text = movieDetails.production_countries!.map{$0.name}.joined(separator: ",")
             self.overViewLabel.text = movie.overview
+            self.activityIndicator.stopAnimating()
         }
     }
     

@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var results: [Movie] = []
     var page = 1
     @IBOutlet weak var tableView: UITableView!
@@ -46,14 +47,16 @@ class ViewController: UIViewController {
     
     private func getPopularMovies(pageNumber: Int) {
         let queryItems = [URLQueryItem(name: "api_key", value: ApiHandler.api_key), URLQueryItem(name: "language", value: ApiHandler.language), URLQueryItem(name: "page", value: "\(pageNumber)")]
-        
+        self.activityIndicator.startAnimating()
         ApiHandler.shared.getApiCall(urlString: ApiHandler.popular, queryParams: queryItems) { (movie: RootMovie) in
             guard let movies = movie.results else {
+                self.activityIndicator.stopAnimating()
                 print("no data found")
                 return
             }
             self.results.append(contentsOf: movies)
             DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
             }
         }
