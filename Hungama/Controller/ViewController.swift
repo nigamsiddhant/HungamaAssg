@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         
     }
     
-    // load the main screen
+    /// load the main screen
     private func setupView() {
         self.navigationController?.navigationBar.barTintColor = UIColor.black
         
@@ -45,6 +45,8 @@ class ViewController: UIViewController {
     }
     
     
+    /// get popular movies
+    /// - Parameter pageNumber: get tha popular movie according to page
     private func getPopularMovies(pageNumber: Int) {
         let queryItems = [URLQueryItem(name: "api_key", value: ApiHandler.api_key), URLQueryItem(name: "language", value: ApiHandler.language), URLQueryItem(name: "page", value: "\(pageNumber)")]
         self.activityIndicator.startAnimating()
@@ -62,7 +64,7 @@ class ViewController: UIViewController {
         }
     }
     
-    // go to search page
+    /// go to search page
     private func navigateToSearchView() {
         let storyBoard = UIStoryboard(name: "Search", bundle: nil)
         let searchViewController: SearchViewController = storyBoard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
